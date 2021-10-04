@@ -1,0 +1,214 @@
+﻿<Window x:Class="WpfCanvas01.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfCanvas01"
+        xmlns:converter="clr-namespace:WpfCanvas01.Jeff.Converter"
+        xmlns:viewmodel="clr-namespace:Jeff.ViewModels"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        MouseDoubleClick="Window_MouseDoubleClick">
+    <Window.DataContext>
+        <viewmodel:MainWindowViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <converter:GetHalf x:Key="GetHalfofValue"/>
+        <converter:GetActualPosition x:Key="GetRealPosition"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="19"/>
+            <RowDefinition Height="26"/>
+            <RowDefinition Height="374*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" VerticalAlignment="Top" Background="White">
+            <MenuItem Header="File">
+                <MenuItem Header="123"/>
+            </MenuItem>
+        </Menu>
+        <ToolBarTray Grid.Row="1">
+            <ToolBar VerticalAlignment="Center" ToolBarTray.IsLocked="True">
+                <StackPanel Orientation="Horizontal" ToolBar.OverflowMode="Never" Margin="0,0,-13,0">
+                    <Button x:Name="btnSelect" Content="선택" Click="btnSelect_Click"/>
+                    <ComboBox x:Name="cmbShape"
+                              ItemsSource="{Binding Shapes}"
+                              SelectedIndex="{Binding ShapeIdx}"
+                              SelectedValuePath="Key" DisplayMemberPath="Value"
+                              SelectionChanged="cmbShape_SelectionChanged"
+                              Width="65" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <ComboBox x:Name="cmbLineKinds"
+                              ItemsSource="{Binding LineKinds}"
+                              SelectedIndex="{Binding LineKindIdx}"
+                              SelectedValuePath="Key" DisplayMemberPath="Value"
+                              Margin="5,0,0,0"
+                              />
+                    <ComboBox x:Name="cmbThickness"
+                              ItemsSource="{Binding Thicknesses}"
+                              SelectedIndex="{Binding ThicknessIdx}"
+                              SelectedValuePath="Key" DisplayMemberPath="Value" Width="65" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <ComboBox x:Name="cmbColor"
+                              ItemsSource="{Binding Colors}"
+                              SelectedIndex="{Binding ColorIdx}"
+                              SelectedValuePath="Key" DisplayMemberPath="Value"
+                              Width="65" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <ComboBox x:Name="cmbComplete"
+                        ItemsSource="{Binding CompleteMethods}"
+                        SelectedIndex="{Binding CompleteMethodIdx}"
+                        SelectedValuePath="Key" DisplayMemberPath="Value"
+                        Width="65" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Button x:Name="btnConvert" Content="Save as Image" Margin="5,0,0,0" Click="btnConvert_Click"/>
+                </StackPanel>
+            </ToolBar>
+        </ToolBarTray>
+        <Canvas x:Name="canvas0" Grid.Row="2" Background="Transparent"
+                MouseDown="canvas0_MouseDown" MouseUp="canvas0_MouseUp" MouseMove="canvas0_MouseMove" MouseWheel="canvas0_MouseWheel">
+            <Canvas.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Canvas.RenderTransform>
+            <!--<Rectangle x:Name="recEmpty" Fill="Transparent" Width="{Binding ElementName=canvas0, Path=ActualWidth}" Height="{Binding ElementName=canvas0, Path=ActualHeight}"/>-->
+            <!--<Border BorderBrush="Black" BorderThickness="1" Background="Transparent" Width="{Binding ElementName=canvas0, Path=ActualWidth}" Height="{Binding ElementName=canvas0, Path=ActualHeight}"/>-->
+
+            <Line X1="0" Y1="0" X2="40" Y2="40" Stroke="Black" StrokeThickness="3" Canvas.Left="29" Canvas.Top="84" RenderTransformOrigin="0.5,0.5">
+                <Line.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Line.RenderTransform>
+            </Line>
+
+            <Line X1="0" Y1="0" X2="140" Y2="50" StrokeThickness="6" Canvas.Left="50" Canvas.Top="20" RenderTransformOrigin="0.5,0.5">
+                <Line.Stroke>
+                    <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
+                        <RadialGradientBrush.GradientStops>
+                            <GradientStop Color="Red" Offset="0" />
+                            <GradientStop Color="Blue" Offset="0.25" />
+                        </RadialGradientBrush.GradientStops>
+                    </RadialGradientBrush>
+                </Line.Stroke>
+            </Line>
+
+            <Line X1="10" Y1="60" X2="150" Y2="60" Stroke="Black" StrokeThickness="2">
+                <Line.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Line.RenderTransform>
+            </Line>
+
+            <Rectangle x:Name="rec0" Width="100" Height="80" Canvas.Left="181" Canvas.Top="85" Fill="#FFF5F8FE" Stroke="Transparent" StrokeThickness="0" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="-1" ScaleX="-1"/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+
+            <Rectangle x:Name="rec1" Width="80" Height="60" Canvas.Left="206" Canvas.Top="210" Fill="BlueViolet" Stroke="Transparent" StrokeThickness="0" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+
+            <Rectangle x:Name="selectShape" Width="{Binding ElementName=rec1, Path=ActualWidth}"
+                       Height="{Binding ElementName=rec1, Path=ActualHeight}"
+                       Canvas.Left="{Binding ElementName=rec1, Path=(Canvas.Left)}"
+                       Canvas.Top="{Binding ElementName=rec1, Path=(Canvas.Top)}"
+                       StrokeThickness="1">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+
+            <Ellipse Canvas.Left="42" Canvas.Top="170" Stretch="Fill" Fill="AliceBlue" Width="100" Height="100" RenderTransformOrigin="0.5,0.5">
+                <Ellipse.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Ellipse.RenderTransform>
+            </Ellipse>
+
+            <Polyline Canvas.Left="400" Canvas.Top="50" Fill="Blue">
+                <Polyline.Points>
+                    0,0 -10,50 30,10
+                </Polyline.Points>
+            </Polyline>
+
+
+            <Canvas x:Name="selectionCanvas" Visibility="Collapsed" Width="205" Height="170" Canvas.Left="500" Canvas.Top="100">
+                <Border x:Name="selectionBorder"
+                        BorderBrush="Blue"
+                        BorderThickness="1"
+                        Background="LightBlue"
+                        CornerRadius="0"
+                        Opacity="0.5"
+                        Width="{Binding ElementName=selectionCanvas, Path=ActualWidth}"
+                        Height="{Binding ElementName=selectionCanvas, Path=ActualHeight}"/>
+                <!--<Ellipse Canvas.Left="{Binding ElementName=selectionCanvas, Path=ActualWidth}"
+                         Canvas.Top="{Binding ElementName=selectionCanvas, Path=ActualHeight}"
+                         Width="3"
+                         Height="3"
+                         StrokeThickness="1" Stroke="#FF6998ED"/>-->
+                <Rectangle Canvas.Left="-4"
+                           Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetHalfofValue}, ConverterParameter=5}"
+                           Width="5" Height="5"
+                           StrokeThickness="1" Stroke="#FF6998ED"/>
+                <Rectangle Canvas.Left="-4"
+                           Canvas.Top="-4"
+                           Width="5" Height="5"
+                           StrokeThickness="1" Stroke="#FF6998ED"/>
+                <Rectangle Canvas.Left="{Binding ElementName=selectionCanvas, Path=Width, Converter={StaticResource GetHalfofValue}, ConverterParameter=5}"
+                           Canvas.Top="-4"
+                           Width="5" Height="5"
+                           StrokeThickness="1" Stroke="#FF6998ED"/>
+                <Rectangle Canvas.Left="{Binding ElementName=selectionCanvas, Path=Width, Converter={StaticResource GetRealPosition}, ConverterParameter=-1}"
+                           Canvas.Top="-4"
+                           Width="5" Height="5"
+                           StrokeThickness="1" Stroke="#FF6998ED"/>
+                <Rectangle Canvas.Left="{Binding ElementName=selectionCanvas, Path=Width, Converter={StaticResource GetRealPosition}, ConverterParameter=-1}"
+                           Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetHalfofValue}, ConverterParameter=5}"
+                           Width="5" Height="5"
+                           StrokeThickness="1" Stroke="#FF6998ED"/>
+                <Rectangle Canvas.Left="{Binding ElementName=selectionCanvas, Path=Width, Converter={StaticResource GetRealPosition}, ConverterParameter=-1}"
+                           Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetRealPosition}, ConverterParameter=-1}"
+                           Width="5" Height="5"
+                           StrokeThickness="1" Stroke="#FF6998ED"/>
+                <Rectangle Canvas.Left="{Binding ElementName=selectionCanvas, Path=Width, Converter={StaticResource GetHalfofValue}, ConverterParameter=5}"
+                           Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetRealPosition}, ConverterParameter=-1}"
+                           Width="5" Height="5"
+                           StrokeThickness="1" Stroke="#FF6998ED"/>
+                <Rectangle Canvas.Left="-4"
+                           Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetRealPosition}, ConverterParameter=-1}"
+                           Width="5" Height="5"
+                           StrokeThickness="1" Stroke="#FF6998ED"/>
+            </Canvas>
+        </Canvas>
+    </Grid>
+</Window>
