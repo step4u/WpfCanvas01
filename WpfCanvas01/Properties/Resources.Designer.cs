@@ -63,6 +63,16 @@ namespace WpfCanvas01.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] ArrowRotate {
+            get {
+                object obj = ResourceManager.GetObject("ArrowRotate", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] ArrowSelectMove {
             get {
                 object obj = ResourceManager.GetObject("ArrowSelectMove", resourceCulture);

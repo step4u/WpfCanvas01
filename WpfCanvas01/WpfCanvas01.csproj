@@ -76,6 +76,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Jeff\Controls\SelectionCanvas.cs" />
+    <Compile Include="Jeff\Converter\GetActualSize.cs" />
     <Compile Include="Jeff\Converter\GetActualPosition.cs" />
     <Compile Include="Jeff\Converter\GetHalf.cs" />
     <Compile Include="Jeff\ViewModels\MainWindowViewModel.cs" />
@@ -91,7 +93,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Jeff\enums.cs" />
+    <Compile Include="Jeff\Defines\enums.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -124,11 +126,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Jeff\Defines\" />
     <Folder Include="Jeff\Views\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ArrowSelectMove.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ArrowRotate.cur" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

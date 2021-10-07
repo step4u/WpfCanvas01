@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace Jeff.Converter
 {
-    class GetHalf : IValueConverter
+    class GetActualSize : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
@@ -12,7 +12,7 @@ namespace Jeff.Converter
             double val = (double)value;
             double param = double.Parse(parameter.ToString());
 
-            retval = val / 2 - param/2;
+            retval = val - param;
 
             return retval;
         }

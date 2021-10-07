@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfCanvas01"
-        xmlns:converter="clr-namespace:WpfCanvas01.Jeff.Converter"
+        xmlns:converter="clr-namespace:Jeff.Converter"
         xmlns:viewmodel="clr-namespace:Jeff.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
@@ -30,7 +30,7 @@
         <ToolBarTray Grid.Row="1">
             <ToolBar VerticalAlignment="Center" ToolBarTray.IsLocked="True">
                 <StackPanel Orientation="Horizontal" ToolBar.OverflowMode="Never" Margin="0,0,-13,0">
-                    <Button x:Name="btnSelect" Content="선택" Click="btnSelect_Click"/>
+                    <ToggleButton x:Name="btnSelect" Content="선택" Click="btnSelect_Click"/>
                     <ComboBox x:Name="cmbShape"
                               ItemsSource="{Binding Shapes}"
                               SelectedIndex="{Binding ShapeIdx}"
@@ -62,7 +62,7 @@
             </ToolBar>
         </ToolBarTray>
         <Canvas x:Name="canvas0" Grid.Row="2" Background="Transparent"
-                MouseDown="canvas0_MouseDown" MouseUp="canvas0_MouseUp" MouseMove="canvas0_MouseMove" MouseWheel="canvas0_MouseWheel">
+                MouseDown="canvas0_MouseDown" MouseUp="canvas0_MouseUp" MouseMove="canvas0_MouseMove">
             <Canvas.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -94,6 +94,14 @@
                         </RadialGradientBrush.GradientStops>
                     </RadialGradientBrush>
                 </Line.Stroke>
+                <Line.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Line.RenderTransform>
             </Line>
 
             <Line X1="10" Y1="60" X2="150" Y2="60" Stroke="Black" StrokeThickness="2">
@@ -155,35 +163,68 @@
                 </Ellipse.RenderTransform>
             </Ellipse>
 
-            <Polyline Canvas.Left="400" Canvas.Top="50" Fill="Blue">
+            <Polyline Canvas.Left="400" Canvas.Top="50" Fill="Blue" RenderTransformOrigin="0.5,0.5">
                 <Polyline.Points>
                     0,0 -10,50 30,10
                 </Polyline.Points>
+                <Polyline.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Polyline.RenderTransform>
             </Polyline>
 
 
-            <Canvas x:Name="selectionCanvas" Visibility="Collapsed" Width="205" Height="170" Canvas.Left="500" Canvas.Top="100">
+            <!--<Canvas x:Name="selectionCanvas" Visibility="Visible"
+                    Width="205" Height="170"
+                    Canvas.Left="500" Canvas.Top="100"
+                    RenderTransformOrigin="0.5, 0.5">
+                <Canvas.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Canvas.RenderTransform>
                 <Border x:Name="selectionBorder"
                         BorderBrush="Blue"
                         BorderThickness="1"
                         Background="LightBlue"
-                        CornerRadius="0"
-                        Opacity="0.5"
-                        Width="{Binding ElementName=selectionCanvas, Path=ActualWidth}"
-                        Height="{Binding ElementName=selectionCanvas, Path=ActualHeight}"/>
-                <!--<Ellipse Canvas.Left="{Binding ElementName=selectionCanvas, Path=ActualWidth}"
+                        Opacity="0.3"
+                        Width="{Binding ElementName=selectionCanvas, Path=Width}"
+                        Height="{Binding ElementName=selectionCanvas, Path=Height}"/>
+                --><!--<Ellipse Canvas.Left="{Binding ElementName=selectionCanvas, Path=ActualWidth}"
                          Canvas.Top="{Binding ElementName=selectionCanvas, Path=ActualHeight}"
                          Width="3"
                          Height="3"
-                         StrokeThickness="1" Stroke="#FF6998ED"/>-->
+                         StrokeThickness="1" Stroke="#FF6998ED"/>--><!--
                 <Rectangle Canvas.Left="-4"
                            Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetHalfofValue}, ConverterParameter=5}"
                            Width="5" Height="5"
                            StrokeThickness="1" Stroke="#FF6998ED"/>
-                <Rectangle Canvas.Left="-4"
-                           Canvas.Top="-4"
-                           Width="5" Height="5"
-                           StrokeThickness="1" Stroke="#FF6998ED"/>
+                <Canvas x:Name="canvasLT" Canvas.Left="-14" Canvas.Top="-14"
+                        Width="15" Height="15"
+                        Background="Transparent">
+                    --><!--<Border Background="Black" BorderBrush="Black" BorderThickness="1"
+                            Width="{Binding ElementName=canvasLT, Path=Width}"
+                            Height="{Binding ElementName=canvasLT, Path=Height}"/>--><!--
+                    <Rectangle Canvas.Left="0" Canvas.Top="0"
+                               Width="5" Height="5"
+                               Fill="Transparent"
+                               StrokeThickness="0" Stroke="Transparent"
+                               MouseEnter="Rotate_Shape_MouseEnter"
+                               MouseLeave="Rotate_Shape_MouseLeave"/>
+                    <Rectangle Canvas.Left="10" Canvas.Top="10"
+                               Width="5" Height="5"
+                               Fill="Transparent"
+                               StrokeThickness="1" Stroke="#FF6998ED"
+                               MouseEnter="Resize_Shape_MouseEnter"
+                               MouseLeave="Resize_Shape_MouseLeave"/>
+                </Canvas>
                 <Rectangle Canvas.Left="{Binding ElementName=selectionCanvas, Path=Width, Converter={StaticResource GetHalfofValue}, ConverterParameter=5}"
                            Canvas.Top="-4"
                            Width="5" Height="5"
@@ -208,7 +249,7 @@
                            Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetRealPosition}, ConverterParameter=-1}"
                            Width="5" Height="5"
                            StrokeThickness="1" Stroke="#FF6998ED"/>
-            </Canvas>
+            </Canvas>-->
         </Canvas>
     </Grid>
 </Window>

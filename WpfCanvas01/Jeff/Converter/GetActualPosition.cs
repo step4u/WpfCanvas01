@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
-using System.Windows.Shapes;
 
-namespace WpfCanvas01.Jeff.Converter
+namespace Jeff.Converter
 {
     class GetActualPosition : IValueConverter
     {
