@@ -58,10 +58,11 @@ namespace Jeff.Controls
             set
             {
                 shape = value;
-                DrawSahpe();
+                //DrawSahpe();
             }
         }
 
+#if false
         private void DrawSahpe()
         {
             double _width = 0;
@@ -104,33 +105,10 @@ namespace Jeff.Controls
             Canvas.SetLeft(shape, _left);
             Canvas.SetTop(shape, _top);
         }
+#endif
 
         private void InitEvents()
         {
-            //this.MouseEnter += (s, e) => {
-            //    var _parent = this.Parent as Canvas;
-            //    prevcursor = _parent.Cursor;
-
-            //    point = e.GetPosition(this);
-
-            //    DetectMouseEnterPosition(out bool isOnPosition, out MousePosition position, point);
-            //    ChangeMouseCursor(isOnPosition, position);
-            //    System.Diagnostics.Debug.WriteLine($"MouseEnter -> isOnPosition:{isOnPosition}, MousePosition:{position}, _parent.Cursor:{_parent.Cursor}");
-            //    System.Diagnostics.Debug.WriteLine($"MouseEnter -> border.Width:{border.Width}, border.Height:{border.Height}");
-            //};
-
-            //this.MouseLeave += (s, e) =>
-            //{
-            //    DetectMouseEnterPosition(out bool isOnPosition, out MousePosition position, point);
-
-            //    if (!isOnPosition)
-            //    {
-            //        Canvas _parent = this.Parent as Canvas;
-            //        if (_parent != null)
-            //            _parent.Cursor = prevcursor;
-            //    }
-            //};
-
             rectRLT.MouseEnter += RectRotate_MouseEnter;
             rectRRT.MouseEnter += RectRotate_MouseEnter;
             rectRRB.MouseEnter += RectRotate_MouseEnter;
@@ -183,7 +161,6 @@ namespace Jeff.Controls
             if (MouseLeftResizeRange != null)
                 MouseLeftResizeRange(sender, e);
         }
-
 
         private void DetectMouseEnterPosition(out bool isOnPosition, out MousePosition position, Point cpoint)
         {

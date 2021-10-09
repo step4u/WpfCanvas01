@@ -29,12 +29,6 @@
         Rotating = 7
     }
 
-    public enum SelectMode
-    {
-        OFF = 0,
-        ON = 1
-    }
-
     /// <summary>
     /// R_ : Rotate
     /// S_ : reSize
@@ -72,5 +66,25 @@
         RRT = 11,
         RRB = 12,
         RLB = 13
+    }
+
+    public enum DrawMode
+    {
+        None = 0,
+        Draw = 1,
+        Select = 2
+    }
+
+    public enum SelectMode
+    {
+        None = 0,
+        RotateOver = 1,
+        Rotating = 2,
+        RotatingOutOfRange = 3,
+        ResizeOver = 4,
+        Resizing = 5,
+        ResizingOutOfRange = 6,
+        MoveOver = 7,
+        Moving = 8
     }
 }
