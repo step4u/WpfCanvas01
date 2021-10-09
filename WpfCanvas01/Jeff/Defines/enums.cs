@@ -22,10 +22,11 @@
         None = 0,
         Drawing = 1,
         Selecting = 2,
-        ResizeOver = 3,
-        Resizing = 6,
-        RotateOver = 5,
-        Rotating = 6
+        Moving = 3,
+        ResizeOver = 4,
+        Resizing = 5,
+        RotateOver = 6,
+        Rotating = 7
     }
 
     public enum SelectMode

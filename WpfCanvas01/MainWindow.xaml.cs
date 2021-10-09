@@ -39,11 +39,9 @@ namespace WpfCanvas01
         //}
 
         SelectionCanvas curSelection;
-        List<UIElement> curSelections = new List<UIElement>();
         double canvasLeft, canvasTop;
         Point point, point4shape, centerpoint;
         dynamic curshape = null;
-        List<dynamic> curShapes = new List<dynamic>();
         DrawState _drawState = DrawState.None;
         private void canvas0_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -139,31 +137,32 @@ namespace WpfCanvas01
                         else if (e.OriginalSource is Line)
                         {
                             curshape = (Line)e.OriginalSource;
-                            canvasLeft = Canvas.GetLeft(curshape);
-                            canvasTop = Canvas.GetTop(curshape);
                         }
                         else if (e.OriginalSource is Rectangle)
                         {
                             curshape = (Rectangle)e.OriginalSource;
-                            canvasLeft = Canvas.GetLeft(curshape);
-                            canvasTop = Canvas.GetTop(curshape);
                         }
                         else if (e.OriginalSource is Polyline)
                         {
                             curshape = (Polyline)e.OriginalSource;
-                            canvasLeft = Canvas.GetLeft(curshape);
-                            canvasTop = Canvas.GetTop(curshape);
                         }
                         else if (e.OriginalSource is Ellipse)
                         {
                             curshape = (Ellipse)e.OriginalSource;
-                            canvasLeft = Canvas.GetLeft(curshape);
-                            canvasTop = Canvas.GetTop(curshape);
                         }
+
+                        //canvasLeft = Canvas.GetLeft(curshape);
+                        //canvasTop = Canvas.GetTop(curshape);
+                        System.Diagnostics.Debug.WriteLine($"MouseDown -> Rectangle canvasLeft: {canvasLeft}, canvasTop: {canvasTop}");
 
                         if (Keyboard.Modifiers == ModifierKeys.Control)
                         {
-                            curSelection = new SelectionCanvas() { ParentWin = this };
+                            curSelection = new SelectionCanvas() { ParentWin = this, RenderTransform = CreateTransformGroup(), RenderTransformOrigin = new Point(0.5, 0.5) };
+                            curSelection.MouseEnteredRotationRange += Selection_MouseEnteredRotationRange;
+                            curSelection.MouseLeftRotationRange += Selection_MouseLeftRotationRange;
+                            curSelection.MouseEnteredResizeRange += Selection_MouseEnteredResizeRange;
+                            curSelection.MouseLeftResizeRange += Selection_MouseLeftResizeRange;
+
                             UpdateSelection(ref curSelection, ref curshape);
                         }
                         else
@@ -172,12 +171,22 @@ namespace WpfCanvas01
                             {
                                 UpdateSelection(ref curSelection, ref curshape, Visibility.Collapsed);
 
-                                curSelection = new SelectionCanvas() { ParentWin = this };
+                                curSelection = new SelectionCanvas() { ParentWin = this, RenderTransform = CreateTransformGroup(), RenderTransformOrigin = new Point(0.5, 0.5) };
+                                curSelection.MouseEnteredRotationRange += Selection_MouseEnteredRotationRange;
+                                curSelection.MouseLeftRotationRange += Selection_MouseLeftRotationRange;
+                                curSelection.MouseEnteredResizeRange += Selection_MouseEnteredResizeRange;
+                                curSelection.MouseLeftResizeRange += Selection_MouseLeftResizeRange;
+
                                 UpdateSelection(ref curSelection, ref curshape);
                             }
                             else
                             {
-                                curSelection = new SelectionCanvas() { ParentWin = this };
+                                curSelection = new SelectionCanvas() { ParentWin = this, RenderTransform = CreateTransformGroup(), RenderTransformOrigin = new Point(0.5, 0.5) };
+                                curSelection.MouseEnteredRotationRange += Selection_MouseEnteredRotationRange;
+                                curSelection.MouseLeftRotationRange += Selection_MouseLeftRotationRange;
+                                curSelection.MouseEnteredResizeRange += Selection_MouseEnteredResizeRange;
+                                curSelection.MouseLeftResizeRange += Selection_MouseLeftResizeRange;
+
                                 UpdateSelection(ref curSelection, ref curshape);
                             }
                         }
@@ -197,7 +206,7 @@ namespace WpfCanvas01
 
                                 UpdateSelection(ref _selection, ref curshape, Visibility.Collapsed);
 
-                                curshape = null;
+                                //curshape = null;
                             }
                             else
                             {
@@ -207,33 +216,118 @@ namespace WpfCanvas01
                                 curshape = _selection.Shape;
 
                                 //point4shape = e.GetPosition(canvas0);
-                                //canvasLeft = Canvas.GetLeft(_border);
-                                //canvasTop = Canvas.GetTop(_border);
+                                canvasLeft = Canvas.GetLeft(curSelection);
+                                canvasTop = Canvas.GetTop(curSelection);
+
+                                System.Diagnostics.Debug.WriteLine($"canvas0_MouseDown -> Border -> canvasLeft: {canvasLeft}, canvasTop: {canvasTop}");
                             }
                         }
                     }
                 }
                 else if (e.LeftButton == MouseButtonState.Pressed && _drawState == DrawState.RotateOver)
                 {
-                    //var source = e.OriginalSource as Rectangle;
-                    //if (source.Parent is Canvas)
-                    //{
-                    //    var canvas = source.Parent as Canvas;
-                    //    if (canvas.Name == "canvasLT")
-                    //    {
-                    //        GetWidthHeightSelectRectOfPoly(curPolyline, out double _width, out double _height, out double _maxX, out double _maxY, out double _minX, out double _minY);
+                    double _x = Canvas.GetLeft(curSelection) + curSelection.Width / 2;
+                    double _y = Canvas.GetTop(curSelection) + curSelection.Height / 2;
 
-                    //        double _x = Canvas.GetLeft(curshape) + _width / 2;
-                    //        double _y = Canvas.GetTop(curshape) + _height / 2;
-
-                    //        point4shape = e.GetPosition(canvas0);
-                    //        centerpoint = new Point(_x, _y);
-                    //        _drawState = DrawState.Rotating;
-                    //    }
-                    //}
+                    centerpoint = new Point(_x, _y);
+                    
+                    _drawState = DrawState.Rotating;
+                    System.Diagnostics.Debug.WriteLine($"canvas0_MouseDown -> _drawState.RotateOver -> _drawState: {_drawState}");
+                }
+                else if (e.LeftButton == MouseButtonState.Pressed && _drawState == DrawState.ResizeOver)
+                {
+                    _drawState = DrawState.Resizing;
+                    System.Diagnostics.Debug.WriteLine($"canvas0_MouseDown -> _drawState.ResizeOver -> _drawState: {_drawState}");
                 }
             }
         }
+
+        #region Event from Selection whether the mouse Enter or Leave on Rotation or Resize range
+        private void Selection_MouseEnteredRotationRange(object source, MouseEventArgs e)
+        {
+            if ((bool)btnSelect.IsChecked && _drawState == DrawState.Selecting)
+            {
+                Rectangle rect = (Rectangle)e.OriginalSource;
+                System.Diagnostics.Debug.WriteLine($"Selection_MouseEnteredRotationRange -> Name:{rect.Name}");
+
+                MemoryStream _mem = new MemoryStream(Properties.Resources.ArrowRotate);
+                canvas0.Cursor = new Cursor(_mem);
+
+                _drawState = DrawState.RotateOver;
+            }
+        }
+
+        private void Selection_MouseLeftRotationRange(object source, MouseEventArgs e)
+        {
+            if ((bool)btnSelect.IsChecked && _drawState == DrawState.RotateOver)
+            {
+                Rectangle rect = (Rectangle)e.OriginalSource;
+                System.Diagnostics.Debug.WriteLine($"Selection_MouseLeftRotationRange -> Name:{rect.Name} ");
+
+                MemoryStream _mem = new MemoryStream(Properties.Resources.ArrowSelectMove);
+                canvas0.Cursor = new Cursor(_mem);
+
+                _drawState = DrawState.Selecting;
+            }
+        }
+
+        private void Selection_MouseEnteredResizeRange(object source, MouseEventArgs e)
+        {
+            if ((bool)btnSelect.IsChecked && _drawState == DrawState.Selecting)
+            {
+                Rectangle rect = (Rectangle)e.OriginalSource;
+                System.Diagnostics.Debug.WriteLine($"Selection_MouseEnteredResizeRange -> Name:{rect.Name} ");
+
+                Cursor _cursor = Cursors.ScrollNE;
+
+                switch (rect.Name)
+                {
+                    case "LT":
+                        _cursor = Cursors.SizeNWSE;
+                        break;
+                    case "MT":
+                        _cursor = Cursors.SizeNS;
+                        break;
+                    case "RT":
+                        _cursor = Cursors.SizeNESW;
+                        break;
+                    case "RM":
+                        _cursor = Cursors.SizeWE;
+                        break;
+                    case "RB":
+                        _cursor = Cursors.SizeNWSE;
+                        break;
+                    case "BM":
+                        _cursor = Cursors.SizeNS;
+                        break;
+                    case "LB":
+                        _cursor = Cursors.SizeNESW;
+                        break;
+                    case "LM":
+                        _cursor = Cursors.SizeWE;
+                        break;
+                }
+
+                canvas0.Cursor = _cursor;
+
+                _drawState = DrawState.ResizeOver;
+            }
+        }
+
+        private void Selection_MouseLeftResizeRange(object source, MouseEventArgs e)
+        {
+            if ((bool)btnSelect.IsChecked && _drawState == DrawState.ResizeOver)
+            {
+                Rectangle rect = (Rectangle)e.OriginalSource;
+                System.Diagnostics.Debug.WriteLine($"Selection_MouseLeftResizeRange -> Name:{rect.Name} ");
+
+                MemoryStream _mem = new MemoryStream(Properties.Resources.ArrowSelectMove);
+                canvas0.Cursor = new Cursor(_mem);
+
+                _drawState = DrawState.Selecting;
+            }
+        }
+        #endregion
 
         int polycount = 0;
         private void canvas0_MouseUp(object sender, MouseButtonEventArgs e)
@@ -251,9 +345,16 @@ namespace WpfCanvas01
             {
                 if ((bool)btnSelect.IsChecked)
                 {
-                    _drawState = DrawState.Selecting;
-                    MemoryStream _mem = new MemoryStream(Properties.Resources.ArrowSelectMove);
-                    canvas0.Cursor = new Cursor(_mem);
+                    _drawState = DrawState.RotateOver;
+                    System.Diagnostics.Debug.WriteLine($"canvas0_MouseUp -> _drawState:{_drawState}");
+                }
+            }
+            else if (e.ChangedButton == MouseButton.Left && _drawState == DrawState.Resizing)
+            {
+                if ((bool)btnSelect.IsChecked)
+                {
+                    _drawState = DrawState.ResizeOver;
+                    System.Diagnostics.Debug.WriteLine($"canvas0_MouseUp -> _drawState:{_drawState}");
                 }
             }
 
@@ -268,12 +369,17 @@ namespace WpfCanvas01
 
         private void canvas0_MouseMove(object sender, MouseEventArgs e)
         {
-            if (curshape == null) return;
+            
+            //if (curSelection == null) return;
+
+            //System.Diagnostics.Debug.WriteLine($"canvas0_MouseMove -> e.LeftButton: {e.LeftButton}, _drawState: {_drawState}");
 
             point = e.GetPosition(canvas0);
 
             if (_drawState == DrawState.Drawing)
             {
+                if (curshape == null) return;
+
                 double left, top, _x, _y;
 
                 switch (cmbShape.SelectedIndex)
@@ -342,16 +448,23 @@ namespace WpfCanvas01
             }
             else if (e.LeftButton == MouseButtonState.Pressed && _drawState == DrawState.Selecting)
             {
+                if (curSelection == null) return;
+
                 double _leftMoved = point.X - point4shape.X;
                 double _topMoved = point.Y - point4shape.Y;
 
-                Canvas.SetLeft(curshape, canvasLeft + _leftMoved);
-                Canvas.SetTop(curshape, canvasTop + _topMoved);
+                Canvas.SetLeft(curSelection, canvasLeft + _leftMoved);
+                Canvas.SetTop(curSelection, canvasTop + _topMoved);
 
-                UpdateSelection(ref curSelection, ref curshape, Visibility.Visible);
+                //UpdateSelection(ref curSelection, ref curshape, Visibility.Visible);
+
+                //System.Diagnostics.Debug.WriteLine($"canvas0_MouseMove -> e.LeftButton: {e.LeftButton}, _drawState: {_drawState}");
+                System.Diagnostics.Debug.WriteLine($"canvas0_MouseMove -> Selecting -> _leftMoved: {_leftMoved}, _topMoved: {_topMoved}");
             }
             else if (e.LeftButton == MouseButtonState.Pressed && _drawState == DrawState.Rotating)
             {
+                if (curSelection == null) return;
+
                 double radians = Math.Atan((point.Y - centerpoint.Y) / (point.X - centerpoint.X));
                 double angle = radians * 180 / Math.PI;
 
@@ -360,19 +473,40 @@ namespace WpfCanvas01
                     angle += 180;
                 }
 
-                if (angle == 360)
+                if (angle >= 360)
                     angle = 0;
-
-                TransformGroup tfg = curshape.RenderTransform;
+                
+                TransformGroup tfg = curSelection.RenderTransform as TransformGroup;
                 RotateTransform rt = tfg.Children[2] as RotateTransform;
                 rt.Angle = angle;
 
-                tfg = curSelection.RenderTransform as TransformGroup;
-                rt = tfg.Children[2] as RotateTransform;
-                rt.Angle = angle;
-
-                System.Diagnostics.Debug.WriteLine($"Rotate_Shape_MouseMove -> angle: {angle}");
+                System.Diagnostics.Debug.WriteLine($"Rotate_Shape_MouseMove -> Rotating: {_drawState}");
             }
+            else if (e.LeftButton == MouseButtonState.Pressed && _drawState == DrawState.Resizing)
+            {
+                if (curSelection == null) return;
+
+                System.Diagnostics.Debug.WriteLine($"Rotate_Shape_MouseMove -> Resizing: {_drawState}");
+
+                //var source = e.OriginalSource as Rectangle;
+                //if (source.Parent is Canvas)
+                //{
+                //    var canvas = source.Parent as Canvas;
+                //    if (canvas.Name == "canvasLT")
+                //    {
+                //        GetWidthHeightSelectRectOfPoly(curPolyline, out double _width, out double _height, out double _maxX, out double _maxY, out double _minX, out double _minY);
+
+                //        double _x = Canvas.GetLeft(curshape) + _width / 2;
+                //        double _y = Canvas.GetTop(curshape) + _height / 2;
+
+                //        point4shape = e.GetPosition(canvas0);
+                //        centerpoint = new Point(_x, _y);
+                //        _drawState = DrawState.Rotating;
+                //    }
+                //}
+            }
+
+            //System.Diagnostics.Debug.WriteLine($"canvas0_MouseMove -> e.LeftButton: {e.LeftButton}, _drawState: {_drawState}");
         }
 
         private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -398,7 +532,7 @@ namespace WpfCanvas01
             TransformGroup _group = new TransformGroup();
             _group.Children.Add(new ScaleTransform());
             _group.Children.Add(new SkewTransform());
-            _group.Children.Add(new RotateTransform());
+            _group.Children.Add(new RotateTransform() { CenterX = 25, CenterY = 50 });
             _group.Children.Add(new TranslateTransform());
 
             return _group;
@@ -440,63 +574,182 @@ namespace WpfCanvas01
 
         private void UpdateSelection(ref SelectionCanvas selection, ref dynamic shape, Visibility visibility = Visibility.Visible)
         {
-            if (selection == null) return;
-
             if (visibility == Visibility.Collapsed)
             {
-                EnDisableSelection(ref selection, ref shape, false);
+                if (selection == null) return;
+
+                // Shape is deselected.
+
+                double _width = 0;
+                double _height = 0;
+                double _left = 0;
+                double _top = 0;
+
+                dynamic _shape = GetShapeFromSelection(ref selection);
+
+                if (_shape is Line)
+                {
+                    _width = _shape.X2 - _shape.X1;
+                    _height = _shape.Y2 - _shape.Y1;
+
+                    _left = Canvas.GetLeft(selection);
+                    _top = Canvas.GetTop(selection);
+
+                    if (_width < 0) _left = _left - _width;
+                    if (_height < 0) _top = _top - _height;
+
+                    TransformGroup tfg = _shape.RenderTransform as TransformGroup;
+                    RotateTransform rt = tfg.Children[2] as RotateTransform;
+
+                    TransformGroup tfg1 = selection.RenderTransform as TransformGroup;
+                    RotateTransform rt1 = tfg1.Children[2] as RotateTransform;
+                    rt.Angle = rt1.Angle;
+                }
+                else if (_shape is Rectangle || _shape is Ellipse)
+                {
+                    _width = _shape.Width;
+                    _height = _shape.Height;
+
+                    _left = Canvas.GetLeft(selection);
+                    _top = Canvas.GetTop(selection);
+
+                    var tfg = _shape.RenderTransform as TransformGroup;
+                    var sct = tfg.Children[0] as ScaleTransform;
+                    if (sct.ScaleX == -1)
+                    {
+                        _left = _left + _width;
+                    }
+                    if (sct.ScaleY == -1)
+                    {
+                        _top = _top + _height;
+                    }
+
+                    //TransformGroup tfg = _shape.RenderTransform as TransformGroup;
+                    var rt = tfg.Children[2] as RotateTransform;
+
+                    var tfg1 = selection.RenderTransform as TransformGroup;
+                    var rt1 = tfg1.Children[2] as RotateTransform;
+                    rt.Angle = rt1.Angle;
+                }
+                else if (_shape is Polyline)
+                {
+                    GetWidthHeightSelectRectOfPoly(_shape, ref _width, ref _height, out double _maxX, out double _maxY, out double _minX, out double _minY);
+
+                    TransformGroup tfg = _shape.RenderTransform as TransformGroup;
+                    var rt = tfg.Children[2] as RotateTransform;
+
+                    var tfg1 = selection.RenderTransform as TransformGroup;
+                    var rt1 = tfg1.Children[2] as RotateTransform;
+                    rt.Angle = rt1.Angle;
+
+                    _left = Canvas.GetLeft(selection) - _minX;
+                    _top = Canvas.GetTop(selection) - _minY;
+                }
+                
+                Canvas.SetLeft(_shape, _left + 15);
+                Canvas.SetTop(_shape, _top + 15);
+
+                RemoveShape(selection);
+                selection.Visibility = Visibility.Collapsed;
+                selection = null;
+
+                AddShape(_shape);
+                shape = null;
             }
             else
             {
-                EnDisableSelection(ref selection, ref shape, true);
+                // Shape is selected.
 
-                //if (shape is Line)
-                //{
-                //    EnDisableSelection(ref selection, ref shape, true);
-                //}
-                //else if (shape is Rectangle)
-                //{
-                //    double _width = shape.X2 - shape.X1;
-                //    double _heigh = shape.Y2 - shape.Y1;
+                double _width = 0;
+                double _height = 0;
+                double _left = 0;
+                double _top = 0;
 
-                //    if (_width == 0 && _heigh == 0)
-                //    {
-                //        curshape = null;
-                //        return;
-                //    }
+                if (shape is Line)
+                {
+                    _width = shape.X2 - shape.X1;
+                    _height = shape.Y2 - shape.Y1;
 
-                //    selection.Width = Math.Abs(_width) + 30;
-                //    selection.Height = Math.Abs(_heigh) + 30;
-                //    double _left = Canvas.GetLeft(shape);
-                //    double _top = Canvas.GetTop(shape);
+                    if (_width == 0 && _height == 0)
+                    {
+                        shape = null;
+                        return;
+                    }
 
-                //    if (_width < 0) _left = _left + _width;
-                //    if (_heigh < 0) _top = _top + _heigh;
+                    selection.Width = Math.Abs(_width) + 30;
+                    selection.Height = Math.Abs(_height) + 30;
+                    
+                    _left = Canvas.GetLeft(shape);
+                    _top = Canvas.GetTop(shape);
 
-                //    selection.Width = shape.Width + 30;
-                //    selection.Height = shape.Height + 30;
-                //    Canvas.SetLeft(selection, Canvas.GetLeft(shape) - 15);
-                //    Canvas.SetTop(selection, Canvas.GetTop(shape) - 15);
-                //    selection.Visibility = visibility;
-                //}
-                //else if (shape is Ellipse)
-                //{
-                //    selection.Width = shape.Width + 30;
-                //    selection.Height = shape.Height + 30;
-                //    Canvas.SetLeft(selection, Canvas.GetLeft(shape) - 15);
-                //    Canvas.SetTop(selection, Canvas.GetTop(shape) - 15);
-                //    selection.Visibility = visibility;
-                //}
-                //else if (shape is Polyline)
-                //{
-                //    GetWidthHeightSelectRectOfPoly(shape, out double _width, out double _height, out double _maxX, out double _maxY, out double _minX, out double _minY);
+                    if (_width < 0) _left = _left + _width;
+                    if (_height < 0) _top = _top + _height;
+                }
+                else if (shape is Rectangle || shape is Ellipse)
+                {
+                    _width = shape.Width;
+                    _height = shape.Height;
 
-                //    selection.Width = _width + 30;
-                //    selection.Height = _height + 30;
-                //    Canvas.SetLeft(selection, Canvas.GetLeft(shape) + _minX - 15);
-                //    Canvas.SetTop(selection, Canvas.GetTop(shape) + _minY - 15);
-                //    selection.Visibility = visibility;
-                //}
+                    if (_width == 0 && _height == 0)
+                    {
+                        shape = null;
+                        return;
+                    }
+
+                    selection.Width = Math.Abs(_width) + 30;
+                    selection.Height = Math.Abs(_height) + 30;
+
+                    _left = Canvas.GetLeft(shape);
+                    _top = Canvas.GetTop(shape);
+
+                    var _tfg = shape.RenderTransform as TransformGroup;
+                    var _sct = _tfg.Children[0] as ScaleTransform;
+                    if (_sct.ScaleX == -1)
+                    {
+                        _left = _left - _width;
+                    }
+                    if (_sct.ScaleY == -1)
+                    {
+                        _top = _top - _height;
+                    }
+                }
+                else if (shape is Polyline)
+                {
+                    GetWidthHeightSelectRectOfPoly(shape, ref _width, ref _height, out double _maxX, out double _maxY, out double _minX, out double _minY);
+
+                    selection.Width = _width + 30;
+                    selection.Height = _height + 30;
+
+                    double __left = Canvas.GetLeft(shape);
+                    double __top = Canvas.GetTop(shape);
+
+                    _left = __left + _minX;
+                    _top = __top + _minY;
+                }
+                System.Diagnostics.Debug.WriteLine($"canvas0_MouseDown -> UpdateSelection -> canvasLeft: {Canvas.GetLeft(selection)}, canvasTop: {Canvas.GetTop(selection)}");
+
+                var tfg = shape.RenderTransform as TransformGroup;
+                var rt = tfg.Children[2] as RotateTransform;
+
+                var tfg1 = selection.RenderTransform as TransformGroup;
+                var rt1 = tfg1.Children[2] as RotateTransform;
+
+                rt1.Angle = rt.Angle;
+
+                Canvas.SetLeft(selection, _left - 15);
+                Canvas.SetTop(selection, _top - 15);
+                selection.Visibility = Visibility.Visible;
+
+                RemoveShape(shape);
+                MoveShape2Selection(selection, shape);
+                //shape = null;
+                AddShape(selection);
+                //curSelection = selection;
+
+                canvasLeft = Canvas.GetLeft(selection);
+                canvasTop = Canvas.GetTop(selection);
+
+                System.Diagnostics.Debug.WriteLine($"canvas0_MouseDown -> UpdateSelection -> canvasLeft: {Canvas.GetLeft(curSelection)}, canvasTop: {Canvas.GetTop(curSelection)}");
             }
         }
 
@@ -510,87 +763,10 @@ namespace WpfCanvas01
             this.canvas0.Children.Remove(element);
         }
 
-        //private void AddToSelections(SelectionCanvas selection)
-        //{
-        //    AddShape(selection);
-        //    curSelections.Add(selection);
-        //}
-
-        //private void RemoveFromSelections(SelectionCanvas selection)
-        //{
-        //    RemoveShape(selection);
-        //    curSelections.Remove(selection);
-        //}
-
-        private void EnDisableSelection(ref SelectionCanvas selection, ref dynamic shape, bool token)
-        {
-            if (token)
-            {
-                double _width = shape.X2 - shape.X1;
-                double _heigh = shape.Y2 - shape.Y1;
-
-                if (_width == 0 && _heigh == 0)
-                {
-                    shape = null;
-                    return;
-                }
-
-                selection.Width = Math.Abs(_width) + 30;
-                selection.Height = Math.Abs(_heigh) + 30;
-                double _left = Canvas.GetLeft(shape);
-                double _top = Canvas.GetTop(shape);
-
-                if (_width < 0) _left = _left + _width;
-                if (_heigh < 0) _top = _top + _heigh;
-
-                Canvas.SetLeft(selection, _left - 15);
-                Canvas.SetTop(selection, _top - 15);
-                selection.Visibility = Visibility.Visible;
-
-                RemoveShape(shape);
-                //selection.Shape = shape;
-                MoveShape2Selection(selection, shape);
-                shape = null;
-                AddShape(selection);
-
-                curSelection = selection;
-            }
-            else
-            {
-                dynamic _shape = RestoreShapeFromSelection(selection);
-
-                double _width = _shape.X2 - _shape.X1;
-                double _heigh = _shape.Y2 - _shape.Y1;
-
-                double _left = Canvas.GetLeft(selection);
-                double _top = Canvas.GetTop(selection);
-
-                if (_width < 0) _left = _left - _width;
-                if (_heigh < 0) _top = _top - _heigh;
-
-                TransformGroup tfg = _shape.RenderTransform as TransformGroup;
-                RotateTransform rt0 = tfg.Children[2] as RotateTransform;
-
-                TransformGroup tfg1 = selection.RenderTransform as TransformGroup;
-                RotateTransform rt1 = tfg1.Children[2] as RotateTransform;
-                rt1.Angle = rt0.Angle;
-
-                Canvas.SetLeft(_shape, _left + 15);
-                Canvas.SetTop(_shape, _top + 15);
-
-                RemoveShape(selection);
-                selection.Visibility = Visibility.Collapsed;
-                selection = null;
-
-                AddShape(_shape);
-                //shape = null;
-            }
-        }
-
-        private void GetWidthHeightSelectRectOfPoly(Polyline shape, out double _width, out double _height,
+        public void GetWidthHeightSelectRectOfPoly(Polyline shape, ref double _width, ref double _height,
             out double _maxX, out double _maxY, out double _minX, out double _minY)
         {
-            _width = _height = _maxX = _maxY = _minX = _minY = 0;
+            _maxX = _maxY = _minX = _minY = 0;
 
             Point[] _points = new Point[shape.Points.Count];
             shape.Points.CopyTo(_points, 0);
@@ -602,9 +778,6 @@ namespace WpfCanvas01
 
             _width = _maxX - _minX;
             _height = _maxY - _minY;
-
-            //_width = shape.ActualWidth;
-            //_height = shape.ActualHeight;
         }
 
         private void btnSelect_Click(object sender, RoutedEventArgs e)
@@ -614,7 +787,7 @@ namespace WpfCanvas01
             if ((bool)btn.IsChecked)
             {
                 SelectModeOnOff(SelectMode.ON);
-                UpdateSelection(ref curSelection, ref curshape, Visibility.Visible);
+                //UpdateSelection(ref curSelection, ref curshape, Visibility.Visible);
             }
             else
             {
@@ -634,14 +807,14 @@ namespace WpfCanvas01
                     cmbShape.SelectedIndex = 0;
                     break;
                 case SelectMode.OFF:
-                    if (curSelection == null) return;
+                    //if (curSelection == null) return;
 
-                    curshape = curSelection.Shape;
-                    RemoveShape(curSelection);
-                    AddShape(curshape);
+                    //curshape = curSelection.Shape;
+                    //curSelection.RemoveShape();
+                    //RemoveShape(curSelection);
+                    //AddShape(curshape);
                     _drawState = DrawState.None;
                     canvas0.Cursor = Cursors.Arrow;
-                    curshape = null;
                     break;
             }
         }
@@ -656,8 +829,6 @@ namespace WpfCanvas01
 
             SelectModeOnOff(SelectMode.OFF);
             UpdateSelection(ref curSelection, ref curshape, Visibility.Collapsed);
-            curshape = null;
-            _drawState = DrawState.None;
         }
 
         public void SetCursor(MouseArrowState _state, SelectionCanvas _selection)
@@ -723,7 +894,7 @@ namespace WpfCanvas01
             selection.AddShape(shape);
         }
 
-        private dynamic RestoreShapeFromSelection(SelectionCanvas selection)
+        private dynamic GetShapeFromSelection(ref SelectionCanvas selection)
         {
             dynamic shape = selection.Shape;
             selection.RemoveShape();
@@ -766,6 +937,22 @@ namespace WpfCanvas01
 
             System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
             bitmap.Save("ArrowRotate0.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
+        }
+
+
+        private void btnTest0_Click(object sender, RoutedEventArgs e)
+        {
+            //bool IsSelected = Selector.GetIsSelected(poly02);
+            //Selector.SetIsSelected(poly02, !IsSelected);
+            //bool IsSelectedActive = Selector.GetIsSelectionActive(poly02);
+
+            var _width = poly02.ActualWidth;
+            var _height = poly02.ActualHeight;
+
+            //Rectangle rect = new Rectangle() { Width = _width, Height = _height, Stroke = Brushes.Black, StrokeThickness = 1 };
+            //Canvas.SetLeft(rect, Canvas.GetLeft(poly02));
+            //Canvas.SetTop(rect, Canvas.GetTop(poly02));
+            //canvas0.Children.Add(rect);
         }
 
         private void RenderToDisk1()

@@ -22,12 +22,12 @@
             <RowDefinition Height="26"/>
             <RowDefinition Height="374*"/>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0" VerticalAlignment="Top" Background="White">
+        <Menu Grid.Row="0" VerticalAlignment="Top" Background="White" Panel.ZIndex="1">
             <MenuItem Header="File">
                 <MenuItem Header="123"/>
             </MenuItem>
         </Menu>
-        <ToolBarTray Grid.Row="1">
+        <ToolBarTray Grid.Row="1" Panel.ZIndex="1">
             <ToolBar VerticalAlignment="Center" ToolBarTray.IsLocked="True">
                 <StackPanel Orientation="Horizontal" ToolBar.OverflowMode="Never" Margin="0,0,-13,0">
                     <ToggleButton x:Name="btnSelect" Content="선택" Click="btnSelect_Click"/>
@@ -58,10 +58,11 @@
                         SelectedValuePath="Key" DisplayMemberPath="Value"
                         Width="65" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
                     <Button x:Name="btnConvert" Content="Save as Image" Margin="5,0,0,0" Click="btnConvert_Click"/>
+                    <Button x:Name="btnTest0" Content="IsActive" Margin="5,0,0,0" Click="btnTest0_Click"/>
                 </StackPanel>
             </ToolBar>
         </ToolBarTray>
-        <Canvas x:Name="canvas0" Grid.Row="2" Background="Transparent"
+        <Canvas x:Name="canvas0" Grid.Row="2" Background="Transparent" Panel.ZIndex="0"
                 MouseDown="canvas0_MouseDown" MouseUp="canvas0_MouseUp" MouseMove="canvas0_MouseMove">
             <Canvas.RenderTransform>
                 <TransformGroup>
@@ -118,7 +119,7 @@
             <Rectangle x:Name="rec0" Width="100" Height="80" Canvas.Left="181" Canvas.Top="85" Fill="#FFF5F8FE" Stroke="Transparent" StrokeThickness="0" RenderTransformOrigin="0.5,0.5">
                 <Rectangle.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform ScaleY="-1" ScaleX="-1"/>
+                        <ScaleTransform/>
                         <SkewTransform/>
                         <RotateTransform/>
                         <TranslateTransform/>
@@ -177,6 +178,54 @@
                 </Polyline.RenderTransform>
             </Polyline>
 
+            <!-- Rotates the Polyline 45 degrees about the point (0,0). -->
+            <Polyline Points="25,25 0,50 25,75 50,50 25,25 25,0" 
+                      Stroke="Blue" StrokeThickness="10"
+                      Canvas.Left="350" Canvas.Top="150"
+                      RenderTransformOrigin="0.5, 0.5"
+                      Opacity="0.3">
+                <Polyline.RenderTransform>
+                    <RotateTransform CenterX="0" CenterY="0"/>
+                </Polyline.RenderTransform>
+            </Polyline>
+
+            <!-- Rotates the Polyline 45 degrees about the point (25,50). -->
+            <Polyline x:Name="poly02" Points="25,25 0,50 25,75 50,50 25,25 25,0" 
+                      Stroke="Blue" StrokeThickness="10"
+                      Canvas.Left="350" Canvas.Top="150"
+                      RenderTransformOrigin="0.5, 0.5">
+                <Polyline.RenderTransform>
+                    <RotateTransform Angle="90" />
+                </Polyline.RenderTransform>
+            </Polyline>
+            <Polyline Canvas.Left="545" Canvas.Top="50" Fill="Blue" RenderTransformOrigin="0.5,0.5">
+                <Polyline.Points>
+                    <PointCollection>0,0 45,-25 120,-15 140,70 110,120 40,140 -12,79 </PointCollection>
+                </Polyline.Points>
+                <Polyline.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Polyline.RenderTransform>
+            </Polyline>
+
+            <Polyline Canvas.Left="545" Canvas.Top="220" Fill="Blue" RenderTransformOrigin="0.5,0.5">
+                <Polyline.Points>
+                    <PointCollection>0,0 45,-25 120,-15 140,70 110,120 40,140 -12,79</PointCollection>
+                </Polyline.Points>
+                <Polyline.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="-1"/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Polyline.RenderTransform>
+            </Polyline>
+
 
             <!--<Canvas x:Name="selectionCanvas" Visibility="Visible"
                     Width="205" Height="170"
@@ -197,11 +246,13 @@
                         Opacity="0.3"
                         Width="{Binding ElementName=selectionCanvas, Path=Width}"
                         Height="{Binding ElementName=selectionCanvas, Path=Height}"/>
-                --><!--<Ellipse Canvas.Left="{Binding ElementName=selectionCanvas, Path=ActualWidth}"
+                -->
+            <!--<Ellipse Canvas.Left="{Binding ElementName=selectionCanvas, Path=ActualWidth}"
                          Canvas.Top="{Binding ElementName=selectionCanvas, Path=ActualHeight}"
                          Width="3"
                          Height="3"
-                         StrokeThickness="1" Stroke="#FF6998ED"/>--><!--
+                         StrokeThickness="1" Stroke="#FF6998ED"/>-->
+            <!--
                 <Rectangle Canvas.Left="-4"
                            Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetHalfofValue}, ConverterParameter=5}"
                            Width="5" Height="5"
@@ -209,9 +260,11 @@
                 <Canvas x:Name="canvasLT" Canvas.Left="-14" Canvas.Top="-14"
                         Width="15" Height="15"
                         Background="Transparent">
-                    --><!--<Border Background="Black" BorderBrush="Black" BorderThickness="1"
+                    -->
+            <!--<Border Background="Black" BorderBrush="Black" BorderThickness="1"
                             Width="{Binding ElementName=canvasLT, Path=Width}"
-                            Height="{Binding ElementName=canvasLT, Path=Height}"/>--><!--
+                            Height="{Binding ElementName=canvasLT, Path=Height}"/>-->
+            <!--
                     <Rectangle Canvas.Left="0" Canvas.Top="0"
                                Width="5" Height="5"
                                Fill="Transparent"

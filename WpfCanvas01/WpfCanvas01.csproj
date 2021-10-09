@@ -80,6 +80,7 @@
     <Compile Include="Jeff\Converter\GetActualSize.cs" />
     <Compile Include="Jeff\Converter\GetActualPosition.cs" />
     <Compile Include="Jeff\Converter\GetHalf.cs" />
+    <Compile Include="Jeff\Events\Events.cs" />
     <Compile Include="Jeff\ViewModels\MainWindowViewModel.cs" />
     <Page Include="Jeff\Resources\Icons.xaml">
       <SubType>Designer</SubType>

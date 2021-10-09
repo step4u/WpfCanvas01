@@ -1,5 +1,6 @@
 ﻿using Jeff.Converter;
 using Jeff.Defines;
+using Jeff.Events;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,6 +14,12 @@ namespace Jeff.Controls
 {
     public class SelectionCanvas : Canvas
     {
+        public event MouseEnteredRotateRangeEventHandler MouseEnteredRotationRange;
+        public event MouseLeftRotateRangeEventHandler MouseLeftRotationRange;
+
+        public event MouseEnteredResizeRangeEventHandler MouseEnteredResizeRange;
+        public event MouseLeftResizeRangeEventHandler MouseLeftResizeRange;
+
         public MainWindow ParentWin;
         Border border;
         Rectangle rectLM, rectLT, rectMT, rectRT, rectRM, rectRB, rectMB, rectLB;
@@ -47,26 +54,55 @@ namespace Jeff.Controls
         Point point;
         public dynamic Shape
         {
-            get
-            {
-                return shape;
-            }
+            get { return shape; }
             set
             {
                 shape = value;
+                DrawSahpe();
+            }
+        }
 
-                double _width = shape.X2 - shape.X1;
-                double _heigh = shape.Y2 - shape.Y1;
+        private void DrawSahpe()
+        {
+            double _width = 0;
+            double _height = 0;
+            double _left = 15;
+            double _top = 15;
 
-                double _left = 15;
-                double _top = 15;
+            if (shape is Line)
+            {
+                _width = shape.X2 - shape.X1;
+                _height = shape.Y2 - shape.Y1;
 
                 if (_width < 0) _left = _left - _width;
-                if (_heigh < 0) _top = _top - _heigh;
-
-                Canvas.SetLeft(shape, _left);
-                Canvas.SetTop(shape, _top);
+                if (_height < 0) _top = _top - _height;
             }
+            else if (shape is Rectangle || shape is Ellipse)
+            {
+                _width = shape.Width;
+                _height = shape.Height;
+
+                var tfg = shape.RenderTransform;
+                var sct = tfg.Children[0];
+                if (sct.ScaleX == -1)
+                {
+                    _left = _left + _width;
+                }
+                if (sct.ScaleY == -1)
+                {
+                    _top = _top + _height;
+                }
+            }
+            else if (shape is Polyline)
+            {
+                ParentWin.GetWidthHeightSelectRectOfPoly(shape, ref _width, ref _height, out double _maxX, out double _maxY, out double _minX, out double _minY);
+
+                _left = _left - _minX;
+                _top = _top - _minY;
+            }
+
+            Canvas.SetLeft(shape, _left);
+            Canvas.SetTop(shape, _top);
         }
 
         private void InitEvents()
@@ -104,34 +140,50 @@ namespace Jeff.Controls
             rectRRT.MouseLeave += RectRotate_MouseLeave;
             rectRRB.MouseLeave += RectRotate_MouseLeave;
             rectRLB.MouseLeave += RectRotate_MouseLeave;
+
+            rectLT.MouseEnter += RectResize_MouseEnter;
+            rectMT.MouseEnter += RectResize_MouseEnter;
+            rectRT.MouseEnter += RectResize_MouseEnter;
+            rectRM.MouseEnter += RectResize_MouseEnter;
+            rectRB.MouseEnter += RectResize_MouseEnter;
+            rectMB.MouseEnter += RectResize_MouseEnter;
+            rectLB.MouseEnter += RectResize_MouseEnter;
+            rectLM.MouseEnter += RectResize_MouseEnter;
+
+            rectLT.MouseLeave += RectResize_MouseLeave;
+            rectMT.MouseLeave += RectResize_MouseLeave;
+            rectRT.MouseLeave += RectResize_MouseLeave;
+            rectRM.MouseLeave += RectResize_MouseLeave;
+            rectRB.MouseLeave += RectResize_MouseLeave;
+            rectMB.MouseLeave += RectResize_MouseLeave;
+            rectLB.MouseLeave += RectResize_MouseLeave;
+            rectLM.MouseLeave += RectResize_MouseLeave;
         }
 
         private void RectRotate_MouseEnter(object sender, MouseEventArgs e)
         {
-            point = e.GetPosition(ParentWin.canvas0);
-
-            System.Diagnostics.Debug.WriteLine($"SelectionCanvas -> RectRotate_MouseEnter -> point: {point.X}/{point.Y}");
-
-            Rectangle rect = sender as Rectangle;
-
-            switch (rect.Name)
-            {
-                case "RLT":
-                    //ParentWin.SetCursor(MouseArrowState.)
-                    break;
-                case "RRT":
-                    break;
-                case "RRB":
-                    break;
-                case "RLB":
-                    break;
-            }
+            if (MouseEnteredRotationRange != null)
+                MouseEnteredRotationRange(sender, e);
         }
 
         private void RectRotate_MouseLeave(object sender, MouseEventArgs e)
         {
-
+            if (MouseLeftRotationRange != null)
+                MouseLeftRotationRange(sender, e);
         }
+
+        private void RectResize_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (MouseEnteredResizeRange != null)
+                MouseEnteredResizeRange(sender, e);
+        }
+
+        private void RectResize_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (MouseLeftResizeRange != null)
+                MouseLeftResizeRange(sender, e);
+        }
+
 
         private void DetectMouseEnterPosition(out bool isOnPosition, out MousePosition position, Point cpoint)
         {
@@ -312,7 +364,7 @@ namespace Jeff.Controls
                     break;
                 case "RM":
                     SetLeft(rect, this.Width - config.left);
-                    bind = new Binding(config.bindWidth);
+                    bind = new Binding(config.bindHeight);
                     bind.Source = this;
                     bind.Converter = new GetHalf();
                     bind.ConverterParameter = 5;
