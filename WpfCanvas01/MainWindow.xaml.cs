@@ -29,6 +29,10 @@ namespace WpfCanvas01
             vModel = this.DataContext as MainWindowViewModel;
         }
 
+        double angle0 = 0;
+        double curshapeAngle = 0;
+        double curselectionAngle = 0;
+        int polycount = 0;
         SelectionCanvas curSelection;
         double canvasLeft, canvasTop, canvasLeftSel, canvasTopSel;
         Point point, point4shape, centerpoint;
@@ -39,9 +43,9 @@ namespace WpfCanvas01
         {
             point = e.GetPosition(canvas0);
 
-            if (e.ChangedButton == MouseButton.Left)
+            if (e.ChangedButton == MouseButton.Left && e.LeftButton == MouseButtonState.Pressed)
             {
-                if (e.LeftButton == MouseButtonState.Pressed && drawMode == DrawMode.None)
+                if (drawMode == DrawMode.None)
                 {
                     if (cmbShape.SelectedIndex == 0) return;
 
@@ -104,7 +108,7 @@ namespace WpfCanvas01
 
                     drawMode = DrawMode.Draw;
                 }
-                else if (e.LeftButton == MouseButtonState.Pressed && drawMode == DrawMode.Draw)
+                else if (drawMode == DrawMode.Draw)
                 {
                     if (cmbShape.SelectedIndex == 3)
                     {
@@ -115,7 +119,7 @@ namespace WpfCanvas01
                         polycount = curshape.Points.Count;
                     }
                 }
-                else if (e.LeftButton == MouseButtonState.Pressed && drawMode == DrawMode.Select && selectMode == SelectMode.None)
+                else if (drawMode == DrawMode.Select && selectMode == SelectMode.None)
                 {
                     point4shape = new Point(point.X, point.Y);
 
@@ -200,7 +204,7 @@ namespace WpfCanvas01
 
                     selectMode = SelectMode.Moving;
                 }
-                else if (e.LeftButton == MouseButtonState.Pressed && drawMode == DrawMode.Select && selectMode == SelectMode.RotateOver)
+                else if (drawMode == DrawMode.Select && selectMode == SelectMode.RotateOver)
                 {
                     double _x = Canvas.GetLeft(curSelection) + curSelection.ActualWidth / 2;
                     double _y = Canvas.GetTop(curSelection) + curSelection.ActualHeight / 2;
@@ -224,17 +228,13 @@ namespace WpfCanvas01
                     //string msg = $"MouseDown -> curshapeAngle: {curshapeAngle}, curselectionAngle: {curselectionAngle}";
                     //DebugWriteLine(msg);
                 }
-                else if (e.LeftButton == MouseButtonState.Pressed && drawMode == DrawMode.Select && selectMode == SelectMode.ResizeOver)
+                else if (drawMode == DrawMode.Select && selectMode == SelectMode.ResizeOver)
                 {
                     selectMode = SelectMode.Resizing;
                 }
             }
         }
 
-        double angle0 = 0;
-        double curshapeAngle = 0;
-        double curselectionAngle = 0;
-        int polycount = 0;
         private void canvas0_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (curshape == null) return;
@@ -283,110 +283,109 @@ namespace WpfCanvas01
 
         private void canvas0_MouseMove(object sender, MouseEventArgs e)
         {
-            
             //if (curSelection == null) return;
 
             point = e.GetPosition(canvas0);
 
-            if (drawMode == DrawMode.Draw)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
-                if (curshape == null) return;
-
-                double left, top, _x, _y;
-
-                switch (cmbShape.SelectedIndex)
+                if (drawMode == DrawMode.Draw)
                 {
-                    case 1:
-                        _x = point.X - point4shape.X;
-                        _y = point.Y - point4shape.Y;
-                        curshape.X2 = _x;
-                        curshape.Y2 = _y;
-                        break;
-                    case 2:
-                    case 4:
-                        left = Canvas.GetLeft(curshape);
-                        top = Canvas.GetTop(curshape);
-                        double _width = point.X - left;
-                        double _height = point.Y - top;
-                        if (cmbShape.SelectedIndex == 4 && Keyboard.Modifiers == ModifierKeys.Shift)
-                        {
-                            if (_width - _height < 0)
+                    if (curshape == null) return;
+
+                    double left, top, _x, _y;
+
+                    switch (cmbShape.SelectedIndex)
+                    {
+                        case 1:
+                            _x = point.X - point4shape.X;
+                            _y = point.Y - point4shape.Y;
+                            curshape.X2 = _x;
+                            curshape.Y2 = _y;
+                            break;
+                        case 2:
+                        case 4:
+                            left = Canvas.GetLeft(curshape);
+                            top = Canvas.GetTop(curshape);
+                            double _width = point.X - left;
+                            double _height = point.Y - top;
+                            if (cmbShape.SelectedIndex == 4 && Keyboard.Modifiers == ModifierKeys.Shift)
                             {
-                                _height = _width;
+                                if (_width - _height < 0)
+                                {
+                                    _height = _width;
+                                }
+                                else
+                                {
+                                    _width = _height;
+                                }
+                            }
+                            if (_width < 0)
+                            {
+                                ScaleTransform _scale = curshape.RenderTransform.Children[0];
+                                _scale.ScaleX = -1;
                             }
                             else
                             {
-                                _width = _height;
+                                ScaleTransform _scale = curshape.RenderTransform.Children[0];
+                                _scale.ScaleX = 1;
                             }
-                        }
-                        if (_width < 0)
-                        {
-                            ScaleTransform _scale = curshape.RenderTransform.Children[0];
-                            _scale.ScaleX = -1;
-                        }
-                        else
-                        {
-                            ScaleTransform _scale = curshape.RenderTransform.Children[0];
-                            _scale.ScaleX = 1;
-                        }
 
-                        if (_height < 0)
-                        {
-                            ScaleTransform _scale = curshape.RenderTransform.Children[0];
-                            _scale.ScaleY = -1;
-                        }
-                        else
-                        {
-                            ScaleTransform _scale = curshape.RenderTransform.Children[0];
-                            _scale.ScaleY = 1;
-                        }
+                            if (_height < 0)
+                            {
+                                ScaleTransform _scale = curshape.RenderTransform.Children[0];
+                                _scale.ScaleY = -1;
+                            }
+                            else
+                            {
+                                ScaleTransform _scale = curshape.RenderTransform.Children[0];
+                                _scale.ScaleY = 1;
+                            }
 
-                        curshape.Width = Math.Abs(_width);
-                        curshape.Height = Math.Abs(_height);
-                        break;
-                    case 3:
-                        _x = point.X - point4shape.X;
-                        _y = point.Y - point4shape.Y;
-                        if (curshape.Points.Count == polycount)
-                        {
-                            curshape.Points.Add(new Point(_x, _y));
-                        }
-                        else
-                        {
-                            curshape.Points[curshape.Points.Count - 1] = new Point(_x, _y);
-                        }
-                        break;
+                            curshape.Width = Math.Abs(_width);
+                            curshape.Height = Math.Abs(_height);
+                            break;
+                        case 3:
+                            _x = point.X - point4shape.X;
+                            _y = point.Y - point4shape.Y;
+                            if (curshape.Points.Count == polycount)
+                            {
+                                curshape.Points.Add(new Point(_x, _y));
+                            }
+                            else
+                            {
+                                curshape.Points[curshape.Points.Count - 1] = new Point(_x, _y);
+                            }
+                            break;
+                    }
                 }
-            }
-            else if (e.LeftButton == MouseButtonState.Pressed && drawMode == DrawMode.Select)
-            {
-                if (curSelection == null) return;
-
-                if (selectMode == SelectMode.Moving)
+                else if (drawMode == DrawMode.Select)
                 {
-                    double _leftMoved = point.X - point4shape.X;
-                    double _topMoved = point.Y - point4shape.Y;
+                    if (curSelection == null) return;
 
-                    if (_leftMoved == 0 && _topMoved == 0)
-                        return;
+                    if (selectMode == SelectMode.Moving)
+                    {
+                        double _leftMoved = point.X - point4shape.X;
+                        double _topMoved = point.Y - point4shape.Y;
 
-                    if (_leftMoved == 0 && _topMoved == 0)
-                        return;
+                        if (_leftMoved == 0 && _topMoved == 0)
+                            return;
 
-                    Canvas.SetLeft(curSelection, canvasLeftSel + _leftMoved);
-                    Canvas.SetTop(curSelection, canvasTopSel + _topMoved);
+                        Canvas.SetLeft(curSelection, canvasLeftSel + _leftMoved);
+                        Canvas.SetTop(curSelection, canvasTopSel + _topMoved);
 
-                    Canvas.SetLeft(curshape, canvasLeft + _leftMoved);
-                    Canvas.SetTop(curshape, canvasTop + _topMoved);
-                }
-                else if (selectMode == SelectMode.Rotating || selectMode == SelectMode.RotatingOutOfRange)
-                {
-                    RotateTransform transform = GetTransform<RotateTransform>(curSelection);
-                    transform.Angle = GetAngle(point, centerpoint, angle0, curshapeAngle);
-                }
-                else if (selectMode == SelectMode.Resizing || selectMode == SelectMode.ResizingOutOfRange)
-                {
+                        Canvas.SetLeft(curshape, canvasLeft + _leftMoved);
+                        Canvas.SetTop(curshape, canvasTop + _topMoved);
+                    }
+                    else if (selectMode == SelectMode.Rotating || selectMode == SelectMode.RotatingOutOfRange)
+                    {
+                        RotateTransform transform = GetTransform<RotateTransform>(curSelection);
+                        transform.Angle = GetAngle(point, centerpoint, angle0, curshapeAngle);
+                    }
+                    else if (selectMode == SelectMode.Resizing || selectMode == SelectMode.ResizingOutOfRange)
+                    {
 
+                    }
                 }
             }
         }
@@ -442,7 +441,7 @@ namespace WpfCanvas01
             UpdateSelection(ref curSelection, ref curshape, Visibility.Collapsed);
         }
 
-        #region Event from Selection whether the mouse Enter or Leave on Rotation or Resize range
+        #region Selection events whether the mouse Enter, Leave, Rotation or Resize on range
         private void Selection_MouseEnteredRotationRange(object source, MouseEventArgs e)
         {
             if (drawMode == DrawMode.Select && selectMode == SelectMode.None)

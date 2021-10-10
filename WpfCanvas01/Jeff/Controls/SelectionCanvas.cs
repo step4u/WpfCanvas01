@@ -51,7 +51,7 @@ namespace Jeff.Controls
             InitRectanlges();
         }
 
-        Point point;
+        //Point point;
         public dynamic Shape
         {
             get { return shape; }
