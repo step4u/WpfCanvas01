@@ -104,8 +104,9 @@ namespace WpfCanvas01
                             newshape.Points.Add(new Point(0, 0));
                             polycount = newshape.Points.Count;
 
-                            Polygon polygon = new Polygon();
-                            Polyline polyline = new Polyline();
+                            //Polygon polygon = new Polygon();
+                            //polygon
+                            //Polyline polyline = new Polyline();
                             break;
                     }
 
@@ -154,6 +155,10 @@ namespace WpfCanvas01
                         else if (e.OriginalSource is Ellipse)
                         {
                             curshape = (Ellipse)e.OriginalSource;
+                        }
+                        else if (e.OriginalSource is Polygon)
+                        {
+                            curshape = (Polygon)e.OriginalSource;
                         }
 
                         if (curshape != null)
@@ -432,7 +437,7 @@ namespace WpfCanvas01
                 //    CompleteDrawing();
                 //}
 
-                if (cmbShape.SelectedIndex == 3)
+                if (cmbShape.SelectedIndex == 3 || cmbShape.SelectedIndex == 5)
                 {
                     endpoint = e.GetPosition(canvas0);
                     CompleteDrawing(endpoint);
@@ -744,11 +749,11 @@ namespace WpfCanvas01
                     break;
                 case 5:
                 case 3:
-                    if (curshape.Points.Count > 2)
+                    if (curshape.Points.Count > 2 && cmbShape.SelectedIndex == 3)
                     {
                         curshape.Points.Add(curshape.Points[0]);
                     }
-
+                    curshape.RenderTransformOrigin = new Point(0.5, 0.5);
                     curshape.Fill = Brushes.Transparent;
                     polycount = 0;
                     break;
@@ -828,7 +833,7 @@ namespace WpfCanvas01
                         _top = _top - _height;
                     }
                 }
-                else if (shape is Polyline)
+                else if (shape is Polyline || shape is Polygon)
                 {
                     double _canvasLeft = Canvas.GetLeft(curshape);
                     double _canvasTop = Canvas.GetTop(curshape);
@@ -930,6 +935,10 @@ namespace WpfCanvas01
             else if (shape is Ellipse)
             {
                 element = (Ellipse)shape;
+            }
+            else if (shape is Polygon)
+            {
+                element = (Polygon)shape;
             }
             else if (shape is SelectionCanvas)
             {
