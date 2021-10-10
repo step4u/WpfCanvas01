@@ -44,8 +44,8 @@ namespace Jeff.Controls
             strokeBrush = new BrushConverter().ConvertFromString(strokeColor) as Brush;
 
             this.Background = Brushes.Transparent;
-            this.RenderTransform = CreateTransformGroup();
-            this.RenderTransformOrigin = new Point(0.5, 0.5);
+            //this.RenderTransform = CreateTransformGroup();
+            //this.RenderTransformOrigin = new Point(0.5, 0.5);
 
             InitBorder();
             InitRectanlges();

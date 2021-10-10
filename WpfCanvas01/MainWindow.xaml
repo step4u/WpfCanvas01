@@ -58,7 +58,8 @@
                         SelectedValuePath="Key" DisplayMemberPath="Value"
                         Width="65" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
                     <Button x:Name="btnConvert" Content="Save as Image" Margin="5,0,0,0" Click="btnConvert_Click"/>
-                    <Button x:Name="btnTest0" Content="IsActive" Margin="5,0,0,0" Click="btnTest0_Click"/>
+                    <Button x:Name="btnTest0" Content="Test0" Margin="5,0,0,0" Click="btnTest0_Click"/>
+                    <Button x:Name="btnTest1" Content="Test1" Margin="5,0,0,0" Click="btnTest1_Click"/>
                 </StackPanel>
             </ToolBar>
         </ToolBarTray>
@@ -86,7 +87,10 @@
                 </Line.RenderTransform>
             </Line>
 
-            <Line X1="0" Y1="0" X2="140" Y2="50" StrokeThickness="6" Canvas.Left="50" Canvas.Top="20" RenderTransformOrigin="0.5,0.5">
+            <Line X1="0" Y1="0" X2="140" Y2="50"
+                  StrokeThickness="6"
+                  Canvas.Left="50" Canvas.Top="20"
+                  RenderTransformOrigin="0.5,0.5">
                 <Line.Stroke>
                     <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
                         <RadialGradientBrush.GradientStops>
@@ -127,10 +131,13 @@
                 </Rectangle.RenderTransform>
             </Rectangle>
 
-            <Rectangle x:Name="rec1" Width="80" Height="60" Canvas.Left="206" Canvas.Top="210" Fill="BlueViolet" Stroke="Transparent" StrokeThickness="0" RenderTransformOrigin="0.5,0.5">
+            <Rectangle x:Name="rec1" Width="80" Height="60" Canvas.Left="206" Canvas.Top="210"
+                       Fill="BlueViolet"
+                       Stroke="Transparent" StrokeThickness="0"
+                       RenderTransformOrigin="0.5,0.5">
                 <Rectangle.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform/>
+                        <ScaleTransform ScaleX="-1" ScaleY="-1"/>
                         <SkewTransform/>
                         <RotateTransform/>
                         <TranslateTransform/>
@@ -145,7 +152,7 @@
                        StrokeThickness="1">
                 <Rectangle.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform/>
+                        <ScaleTransform ScaleX="-1"/>
                         <SkewTransform/>
                         <RotateTransform/>
                         <TranslateTransform/>
@@ -185,7 +192,12 @@
                       RenderTransformOrigin="0.5, 0.5"
                       Opacity="0.3">
                 <Polyline.RenderTransform>
-                    <RotateTransform CenterX="0" CenterY="0"/>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform CenterX="0" CenterY="0"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
                 </Polyline.RenderTransform>
             </Polyline>
 
@@ -195,12 +207,18 @@
                       Canvas.Left="350" Canvas.Top="150"
                       RenderTransformOrigin="0.5, 0.5">
                 <Polyline.RenderTransform>
-                    <RotateTransform Angle="90" />
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
                 </Polyline.RenderTransform>
             </Polyline>
+
             <Polyline Canvas.Left="545" Canvas.Top="50" Fill="Blue" RenderTransformOrigin="0.5,0.5">
                 <Polyline.Points>
-                    <PointCollection>0,0 45,-25 120,-15 140,70 110,120 40,140 -12,79 </PointCollection>
+                    <PointCollection>0,0 45,-25 120,-15 140,70 110,120 40,140 -12,79</PointCollection>
                 </Polyline.Points>
                 <Polyline.RenderTransform>
                     <TransformGroup>
@@ -212,13 +230,13 @@
                 </Polyline.RenderTransform>
             </Polyline>
 
-            <Polyline Canvas.Left="545" Canvas.Top="220" Fill="Blue" RenderTransformOrigin="0.5,0.5">
+            <Polyline Canvas.Left="554" Canvas.Top="223" Fill="Blue" Opacity="0.5" RenderTransformOrigin="0.5,0.5">
                 <Polyline.Points>
-                    <PointCollection>0,0 45,-25 120,-15 140,70 110,120 40,140 -12,79</PointCollection>
+                    <PointCollection>0,0 -40,-25 -60,70 -38,90 -35,120 -5,122</PointCollection>
                 </Polyline.Points>
                 <Polyline.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform ScaleX="-1"/>
+                        <ScaleTransform/>
                         <SkewTransform/>
                         <RotateTransform/>
                         <TranslateTransform/>
@@ -226,7 +244,20 @@
                 </Polyline.RenderTransform>
             </Polyline>
 
-
+            <Polyline Canvas.Left="422" Canvas.Top="198" Fill="DarkGreen" Opacity="0.5" RenderTransformOrigin="0.5,0.5">
+                <Polyline.Points>
+                    <PointCollection>0,0 40,25 60,-70 38,-90 35,-120 5,-122</PointCollection>
+                </Polyline.Points>
+                <Polyline.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="-1" ScaleY="-1"/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Polyline.RenderTransform>
+            </Polyline>
+            
             <!--<Canvas x:Name="selectionCanvas" Visibility="Visible"
                     Width="205" Height="170"
                     Canvas.Left="500" Canvas.Top="100"
