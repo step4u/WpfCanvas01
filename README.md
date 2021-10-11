@@ -3,7 +3,7 @@
 Version 0.0.3
 
 1. Overview
-- Drawing, Selecting, Movieng &amp; Rotating shapes on Canvas
+- Drawing, Selecting, Moving &amp; Rotating shapes on Wpf Canvas
 
 2. Sort of sahpes can be drown.
 - Line, Rectangle, Ellipse, Polyline, Polygon
