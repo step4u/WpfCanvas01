@@ -1,5 +1,4 @@
-# WpfCanvas01
-Example how to draw shapes on Canvas with C# WPF.
+# Example how to draw shapes on Canvas with C# WPF.
 
 Version 0.0.3
 
