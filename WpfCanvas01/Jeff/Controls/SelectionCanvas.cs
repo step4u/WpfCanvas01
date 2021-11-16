@@ -282,19 +282,19 @@ namespace Jeff.Controls
             rectLB = CreateResizeRect(config);
 
             // 회전 좌상(RLT)
-            config = new RectConfigValues() { name = "RLT", left = 0, top = 0, width = 11, height = 11 };
+            config = new RectConfigValues() { name = "RLT", left = 0, top = 0, width = 11, height = 11, strokethickness = 0 };
             rectRLT = CreateResizeRect(config);
 
             // 회전 우상(RRT)
-            config = new RectConfigValues() { name = "RRT", left = 11, top = 0, width = 11, height = 11 };
+            config = new RectConfigValues() { name = "RRT", left = 11, top = 0, width = 11, height = 11, strokethickness = 0 };
             rectRRT = CreateResizeRect(config);
 
             // 회전 우하(RRB)
-            config = new RectConfigValues() { name = "RRB", left = 11, top = 11, width = 11, height = 11 };
+            config = new RectConfigValues() { name = "RRB", left = 11, top = 11, width = 11, height = 11, strokethickness = 0 };
             rectRRB = CreateResizeRect(config);
 
             // 회전 좌하(RLB)
-            config = new RectConfigValues() { name = "RLB", left = 0, top = 11, width = 11, height = 11 };
+            config = new RectConfigValues() { name = "RLB", left = 0, top = 11, width = 11, height = 11, strokethickness = 0 };
             rectRLB = CreateResizeRect(config);
         }
 
@@ -309,7 +309,7 @@ namespace Jeff.Controls
                 Height = config.height,
                 Fill = Brushes.Transparent,
                 Stroke = strokeBrush,
-                StrokeThickness = 1,
+                StrokeThickness = config.strokethickness,
                 Stretch = Stretch.Fill
             };
 
@@ -426,6 +426,7 @@ namespace Jeff.Controls
             public double height = 5;
             public string bindWidth = "Width";
             public string bindHeight = "Height";
+            public double strokethickness = 1;
             public double converterParameter = 5;
             public DependencyProperty dpt = Canvas.TopProperty;
             public DependencyProperty dpl = Canvas.LeftProperty;

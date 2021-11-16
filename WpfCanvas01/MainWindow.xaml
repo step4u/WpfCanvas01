@@ -7,15 +7,11 @@
         xmlns:converter="clr-namespace:Jeff.Converter"
         xmlns:viewmodel="clr-namespace:Jeff.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="600" Width="800"
         MouseDoubleClick="Window_MouseDoubleClick">
     <Window.DataContext>
         <viewmodel:MainWindowViewModel/>
     </Window.DataContext>
-    <Window.Resources>
-        <converter:GetHalf x:Key="GetHalfofValue"/>
-        <converter:GetActualPosition x:Key="GetRealPosition"/>
-    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="19"/>
@@ -109,7 +105,7 @@
                 </Line.RenderTransform>
             </Line>
 
-            <Line X1="10" Y1="60" X2="150" Y2="60" Stroke="Black" StrokeThickness="2">
+            <Line x:Name="line0" X1="0" Y1="0" X2="150" Y2="10" Canvas.Left="322" Canvas.Top="124" Stroke="Black" StrokeThickness="2" RenderTransformOrigin="0.5, 0.5">
                 <Line.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -131,7 +127,7 @@
                 </Rectangle.RenderTransform>
             </Rectangle>
 
-            <Rectangle x:Name="rec1" Width="80" Height="60" Canvas.Left="206" Canvas.Top="210"
+            <Rectangle x:Name="rec1" Width="37.7952755905512" Height="37.7952755905512" Canvas.Left="206" Canvas.Top="210"
                        Fill="BlueViolet"
                        Stroke="Transparent" StrokeThickness="0"
                        RenderTransformOrigin="0.5,0.5">
@@ -257,7 +253,7 @@
                     </TransformGroup>
                 </Polyline.RenderTransform>
             </Polyline>
-            
+
             <!--<Canvas x:Name="selectionCanvas" Visibility="Visible"
                     Width="205" Height="170"
                     Canvas.Left="500" Canvas.Top="100"
