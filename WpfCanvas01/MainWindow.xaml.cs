@@ -10,6 +10,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -110,12 +111,11 @@ namespace WpfCanvas01
                             //Polyline polyline = new Polyline();
                             break;
                         case 6:
-                            newshape = new Polyline
-                            {
-                                Stroke = Brushes.Black,
-                                StrokeThickness = 2
-                            };
-                            newshape.Points.Add(e.GetPosition(canvas0));
+                            newshape = new System.Windows.Shapes.Path();
+                            var pathfigure = new PathFigure { StartPoint = point };
+                            var pathGeometry = new PathGeometry();
+                            pathGeometry.Figures.Add(pathfigure);
+                            newshape.Data = pathGeometry;
                             break;
                     }
 
@@ -397,10 +397,14 @@ namespace WpfCanvas01
                         }
                         break;
                     case 6:
-                        if (!curshape.Points.Contains(point))
+                        BezierSegment bezierSegment = new BezierSegment
                         {
-                            curshape.Points.Add(point);
-                        }
+                            Point1 = startPoint,
+                            Point2 = currentPoint,
+                            Point3 = currentPoint
+                        };
+                        figure.Segments.Add(bezierSegment);
+                        startPoint = currentPoint;
                         break;
                 }
             }
