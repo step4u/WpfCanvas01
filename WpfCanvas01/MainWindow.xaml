@@ -60,6 +60,7 @@
             </ToolBar>
         </ToolBarTray>
         <Canvas x:Name="canvas0" Grid.Row="2" Background="Transparent" Panel.ZIndex="0"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"
                 MouseDown="canvas0_MouseDown" MouseUp="canvas0_MouseUp" MouseMove="canvas0_MouseMove">
             <Canvas.RenderTransform>
                 <TransformGroup>
@@ -84,9 +85,9 @@
             </Line>
 
             <Line X1="0" Y1="0" X2="140" Y2="50"
-                  StrokeThickness="6"
-                  Canvas.Left="50" Canvas.Top="20"
-                  RenderTransformOrigin="0.5,0.5">
+                    StrokeThickness="6"
+                    Canvas.Left="50" Canvas.Top="20"
+                    RenderTransformOrigin="0.5,0.5">
                 <Line.Stroke>
                     <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
                         <RadialGradientBrush.GradientStops>
@@ -128,9 +129,9 @@
             </Rectangle>
 
             <Rectangle x:Name="rec1" Width="37.7952755905512" Height="37.7952755905512" Canvas.Left="206" Canvas.Top="210"
-                       Fill="BlueViolet"
-                       Stroke="Transparent" StrokeThickness="0"
-                       RenderTransformOrigin="0.5,0.5">
+                        Fill="BlueViolet"
+                        Stroke="Transparent" StrokeThickness="0"
+                        RenderTransformOrigin="0.5,0.5">
                 <Rectangle.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform ScaleX="-1" ScaleY="-1"/>
@@ -142,10 +143,10 @@
             </Rectangle>
 
             <Rectangle x:Name="selectShape" Width="{Binding ElementName=rec1, Path=ActualWidth}"
-                       Height="{Binding ElementName=rec1, Path=ActualHeight}"
-                       Canvas.Left="{Binding ElementName=rec1, Path=(Canvas.Left)}"
-                       Canvas.Top="{Binding ElementName=rec1, Path=(Canvas.Top)}"
-                       StrokeThickness="1">
+                        Height="{Binding ElementName=rec1, Path=ActualHeight}"
+                        Canvas.Left="{Binding ElementName=rec1, Path=(Canvas.Left)}"
+                        Canvas.Top="{Binding ElementName=rec1, Path=(Canvas.Top)}"
+                        StrokeThickness="1">
                 <Rectangle.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform ScaleX="-1"/>
@@ -183,10 +184,10 @@
 
             <!-- Rotates the Polyline 45 degrees about the point (0,0). -->
             <Polyline Points="25,25 0,50 25,75 50,50 25,25 25,0" 
-                      Stroke="Blue" StrokeThickness="10"
-                      Canvas.Left="350" Canvas.Top="150"
-                      RenderTransformOrigin="0.5, 0.5"
-                      Opacity="0.3">
+                        Stroke="Blue" StrokeThickness="10"
+                        Canvas.Left="350" Canvas.Top="150"
+                        RenderTransformOrigin="0.5, 0.5"
+                        Opacity="0.3">
                 <Polyline.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -199,9 +200,9 @@
 
             <!-- Rotates the Polyline 45 degrees about the point (25,50). -->
             <Polyline x:Name="poly02" Points="25,25 0,50 25,75 50,50 25,25 25,0" 
-                      Stroke="Blue" StrokeThickness="10"
-                      Canvas.Left="350" Canvas.Top="150"
-                      RenderTransformOrigin="0.5, 0.5">
+                        Stroke="Blue" StrokeThickness="10"
+                        Canvas.Left="350" Canvas.Top="150"
+                        RenderTransformOrigin="0.5, 0.5">
                 <Polyline.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -275,15 +276,15 @@
                         Height="{Binding ElementName=selectionCanvas, Path=Height}"/>
                 -->
             <!--<Ellipse Canvas.Left="{Binding ElementName=selectionCanvas, Path=ActualWidth}"
-                         Canvas.Top="{Binding ElementName=selectionCanvas, Path=ActualHeight}"
-                         Width="3"
-                         Height="3"
-                         StrokeThickness="1" Stroke="#FF6998ED"/>-->
+                            Canvas.Top="{Binding ElementName=selectionCanvas, Path=ActualHeight}"
+                            Width="3"
+                            Height="3"
+                            StrokeThickness="1" Stroke="#FF6998ED"/>-->
             <!--
                 <Rectangle Canvas.Left="-4"
-                           Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetHalfofValue}, ConverterParameter=5}"
-                           Width="5" Height="5"
-                           StrokeThickness="1" Stroke="#FF6998ED"/>
+                            Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetHalfofValue}, ConverterParameter=5}"
+                            Width="5" Height="5"
+                            StrokeThickness="1" Stroke="#FF6998ED"/>
                 <Canvas x:Name="canvasLT" Canvas.Left="-14" Canvas.Top="-14"
                         Width="15" Height="15"
                         Background="Transparent">
@@ -293,42 +294,42 @@
                             Height="{Binding ElementName=canvasLT, Path=Height}"/>-->
             <!--
                     <Rectangle Canvas.Left="0" Canvas.Top="0"
-                               Width="5" Height="5"
-                               Fill="Transparent"
-                               StrokeThickness="0" Stroke="Transparent"
-                               MouseEnter="Rotate_Shape_MouseEnter"
-                               MouseLeave="Rotate_Shape_MouseLeave"/>
+                                Width="5" Height="5"
+                                Fill="Transparent"
+                                StrokeThickness="0" Stroke="Transparent"
+                                MouseEnter="Rotate_Shape_MouseEnter"
+                                MouseLeave="Rotate_Shape_MouseLeave"/>
                     <Rectangle Canvas.Left="10" Canvas.Top="10"
-                               Width="5" Height="5"
-                               Fill="Transparent"
-                               StrokeThickness="1" Stroke="#FF6998ED"
-                               MouseEnter="Resize_Shape_MouseEnter"
-                               MouseLeave="Resize_Shape_MouseLeave"/>
+                                Width="5" Height="5"
+                                Fill="Transparent"
+                                StrokeThickness="1" Stroke="#FF6998ED"
+                                MouseEnter="Resize_Shape_MouseEnter"
+                                MouseLeave="Resize_Shape_MouseLeave"/>
                 </Canvas>
                 <Rectangle Canvas.Left="{Binding ElementName=selectionCanvas, Path=Width, Converter={StaticResource GetHalfofValue}, ConverterParameter=5}"
-                           Canvas.Top="-4"
-                           Width="5" Height="5"
-                           StrokeThickness="1" Stroke="#FF6998ED"/>
+                            Canvas.Top="-4"
+                            Width="5" Height="5"
+                            StrokeThickness="1" Stroke="#FF6998ED"/>
                 <Rectangle Canvas.Left="{Binding ElementName=selectionCanvas, Path=Width, Converter={StaticResource GetRealPosition}, ConverterParameter=-1}"
-                           Canvas.Top="-4"
-                           Width="5" Height="5"
-                           StrokeThickness="1" Stroke="#FF6998ED"/>
+                            Canvas.Top="-4"
+                            Width="5" Height="5"
+                            StrokeThickness="1" Stroke="#FF6998ED"/>
                 <Rectangle Canvas.Left="{Binding ElementName=selectionCanvas, Path=Width, Converter={StaticResource GetRealPosition}, ConverterParameter=-1}"
-                           Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetHalfofValue}, ConverterParameter=5}"
-                           Width="5" Height="5"
-                           StrokeThickness="1" Stroke="#FF6998ED"/>
+                            Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetHalfofValue}, ConverterParameter=5}"
+                            Width="5" Height="5"
+                            StrokeThickness="1" Stroke="#FF6998ED"/>
                 <Rectangle Canvas.Left="{Binding ElementName=selectionCanvas, Path=Width, Converter={StaticResource GetRealPosition}, ConverterParameter=-1}"
-                           Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetRealPosition}, ConverterParameter=-1}"
-                           Width="5" Height="5"
-                           StrokeThickness="1" Stroke="#FF6998ED"/>
+                            Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetRealPosition}, ConverterParameter=-1}"
+                            Width="5" Height="5"
+                            StrokeThickness="1" Stroke="#FF6998ED"/>
                 <Rectangle Canvas.Left="{Binding ElementName=selectionCanvas, Path=Width, Converter={StaticResource GetHalfofValue}, ConverterParameter=5}"
-                           Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetRealPosition}, ConverterParameter=-1}"
-                           Width="5" Height="5"
-                           StrokeThickness="1" Stroke="#FF6998ED"/>
+                            Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetRealPosition}, ConverterParameter=-1}"
+                            Width="5" Height="5"
+                            StrokeThickness="1" Stroke="#FF6998ED"/>
                 <Rectangle Canvas.Left="-4"
-                           Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetRealPosition}, ConverterParameter=-1}"
-                           Width="5" Height="5"
-                           StrokeThickness="1" Stroke="#FF6998ED"/>
+                            Canvas.Top="{Binding ElementName=selectionCanvas, Path=Height, Converter={StaticResource GetRealPosition}, ConverterParameter=-1}"
+                            Width="5" Height="5"
+                            StrokeThickness="1" Stroke="#FF6998ED"/>
             </Canvas>-->
         </Canvas>
     </Grid>

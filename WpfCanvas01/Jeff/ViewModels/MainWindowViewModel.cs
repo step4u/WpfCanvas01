@@ -14,8 +14,8 @@ namespace Jeff.ViewModels
 
         public MainWindowViewModel()
         {
-            Shapes = new Dictionary<int, string>() { { 0, "None" }, { 1, "Line" }, { 2, "Retangle" }, { 3, "Polyline" }, { 4, "Eclipse" }, { 5, "Polygon" } };
-            LineKinds = new Dictionary<DoubleCollection, string>() { { new DoubleCollection { 1, 0 }, "실선" }, { new DoubleCollection { 3, 3 }, "점선" } };
+            Shapes = new Dictionary<int, string>() { { 0, "None" }, { 1, "Line" }, { 2, "Retangle" }, { 3, "Polyline" }, { 4, "Eclipse" }, { 5, "Polygon" }, { 6, "Curve" } };
+            LineKinds = new Dictionary<DoubleCollection, string>() { { new DoubleCollection { 1, 0 }, "실선" }, { new DoubleCollection { 1, 1, 3, 3 }, "점선" } };
             Thicknesses = new Dictionary<int, int>() { { 0, 1 }, { 1, 2 }, { 3, 4 }, { 5, 5 } };
             Colors = new Dictionary<int, string>() { { 0, "Black" }, { 1, "Red" }, { 2, "Green" }, { 3, "Blue" }, { 4, "Yellow" } };
             PointShape = new Dictionary<int, string>() { { 0, "Arrow" }, { 1, "Cross" } };

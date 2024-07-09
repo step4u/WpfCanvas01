@@ -1,6 +1,7 @@
 ﻿using Jeff.Controls;
 using Jeff.Defines;
 using Jeff.ViewModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -69,8 +70,8 @@ namespace WpfCanvas01
                             newshape = new Rectangle()
                             {
                                 Fill = Brushes.Transparent,
-                                Stroke = Brushes.Black,
-                                StrokeThickness = 2,
+                                Stroke = Brushes.Red,
+                                StrokeThickness = 5,
                                 StrokeDashArray = (DoubleCollection)cmbLineKinds.SelectedValue
                             };
                             break;
@@ -107,6 +108,14 @@ namespace WpfCanvas01
                             //Polygon polygon = new Polygon();
                             //polygon
                             //Polyline polyline = new Polyline();
+                            break;
+                        case 6:
+                            newshape = new Polyline
+                            {
+                                Stroke = Brushes.Black,
+                                StrokeThickness = 2
+                            };
+                            newshape.Points.Add(e.GetPosition(canvas0));
                             break;
                     }
 
@@ -385,6 +394,12 @@ namespace WpfCanvas01
                         else
                         {
                             curshape.Points[curshape.Points.Count - 1] = new Point(_x, _y);
+                        }
+                        break;
+                    case 6:
+                        if (!curshape.Points.Contains(point))
+                        {
+                            curshape.Points.Add(point);
                         }
                         break;
                 }
@@ -961,6 +976,8 @@ namespace WpfCanvas01
         #region Canvert Path to Image
         private void btnConvert_Click(object sender, RoutedEventArgs e)
         {
+            var collection = canvas0.Children;
+
             RenderToDisk0();
             RenderToDisk1();
             RenderToDisk2();
